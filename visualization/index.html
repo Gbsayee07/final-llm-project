@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LLM Error Correction Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<header>
+    <h1>LLM Error Correction Dashboard</h1>
+    <p class="subtitle">
+        Visualizing Error Bank, Finetune Dataset, LoRA Checkpoints & Model Inference
+    </p>
+</header>
+
+<!-- ========================================================= -->
+<!--  ERROR BANK SECTION                                       -->
+<!-- ========================================================= -->
+<section class="card">
+    <h2>📘 Error Bank Overview</h2>
+    <p>Browse incorrect → correct model answers.</p>
+
+    <button onclick="loadErrorBank()" class="btn">Load Error Bank</button>
+    <pre id="error-bank-output" class="output"></pre>
+</section>
+
+<!-- ========================================================= -->
+<!--  FINETUNE DATA SECTION                                    -->
+<!-- ========================================================= -->
+<section class="card">
+    <h2>📚 Finetune Dataset</h2>
+    <p>Dataset used for LoRA training.</p>
+
+    <button onclick="loadFinetuneData()" class="btn">Load Finetune Dataset</button>
+    <pre id="finetune-output" class="output"></pre>
+</section>
+
+<!-- ========================================================= -->
+<!--  CHECKPOINT SECTION                                       -->
+<!-- ========================================================= -->
+<section class="card">
+    <h2>💾 Saved LoRA Checkpoints</h2>
+    <p>Lists all adapter checkpoints.</p>
+
+    <button onclick="listCheckpoints()" class="btn">Show Checkpoints</button>
+    <pre id="checkpoint-output" class="output"></pre>
+</section>
+
+
+<!-- ========================================================= -->
+<!--  ERROR TYPE PIE CHART                                     -->
+<!-- ========================================================= -->
+<section class="card">
+    <h2>📊 Error Type Visualization</h2>
+    <p>Distribution of error categories in error_bank.jsonl</p>
+
+    <button onclick="drawErrorTypeChart()" class="btn">Load Chart</button>
+    <canvas id="error-type-chart" width="400" height="300"></canvas>
+</section>
+
+
+<!-- ========================================================= -->
+<!--  PROMPT LENGTH HISTOGRAM                                  -->
+<!-- ========================================================= -->
+<section class="card">
+    <h2>📈 Prompt Length Histogram</h2>
+    <button onclick="drawPromptHistogram()" class="btn">Load Histogram</button>
+    <canvas id="prompt-length-chart" width="500" height="300"></canvas>
+</section>
+
+<!-- ========================================================= -->
+<!--  MODEL INFERENCE SECTION                                  -->
+<!-- ========================================================= -->
+<section class="card">
+    <h2>✨ Interactive LoRA Model Tester</h2>
+
+    <textarea id="prompt-input"
+              placeholder="Type a question to test your model..."></textarea>
+
+    <button onclick="runModel()" class="btn">Run Model</button>
+
+    <pre id="model-output" class="output"></pre>
+</section>
+
+
+<script src="data_loader.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

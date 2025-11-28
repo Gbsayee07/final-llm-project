@@ -1,0 +1,25 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.ipynb_checkpoints/
+
+# Virtual environments
+aeb_env/
+.venv/
+
+# Mac junk
+.DS_Store
+
+# Model checkpoints (keep top-level adapter config + final adapter if you want)
+models/lora_adapter/checkpoint-*/
+models/lora_adapter/*.pt
+models/lora_adapter/*.bin
+models/lora_adapter/*.pth
+
+# Large trainer artifacts
+**/optimizer.pt
+**/scheduler.pt
+**/rng_state.pth
+
+# Jupyter autosave
+*.autosave
