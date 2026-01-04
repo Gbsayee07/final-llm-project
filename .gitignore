@@ -16,6 +16,14 @@ models/lora_adapter/*.pt
 models/lora_adapter/*.bin
 models/lora_adapter/*.pth
 
+# Safetensors weights (large)
+*.safetensors
+
+# Common model binaries
+*.bin
+*.pt
+*.pth
+
 # Large trainer artifacts
 **/optimizer.pt
 **/scheduler.pt

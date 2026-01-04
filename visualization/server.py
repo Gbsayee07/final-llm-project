@@ -4,63 +4,60 @@ from peft import PeftModel
 import torch
 import os
 
-app = Flask(__name__, static_folder=".", static_url_path="")
+# =====================
+# FLASK APP
+# =====================
+
+app = Flask(__name__, static_folder="static")
 
 # =====================
 # LOAD MODEL
 # =====================
+
 print("Loading model...")
 
-BASE = "gpt2"                     # MUST match LoRA training
-ADAPTER = "../models/lora_adapter"  # Location of LoRA adapter
+BASE = "gpt2"
+ADAPTER = "../models/lora_adapter"
 
 tokenizer = AutoTokenizer.from_pretrained(BASE)
 tokenizer.pad_token = tokenizer.eos_token
 
-# Load base model
 base_model = AutoModelForCausalLM.from_pretrained(
     BASE,
     torch_dtype=torch.float32,
     device_map="cpu"
 )
 
-# Load LoRA adapter on top of base model
 model = PeftModel.from_pretrained(base_model, ADAPTER)
 model.eval()
 
-# ============================
-# SERVE DATA FILES
-# ============================
+# =====================
+# FRONTEND
+# =====================
 
-@app.route('/data/<path:filename>')
+@app.route("/")
+def index():
+    return send_from_directory("static", "index.html")
+
+@app.route("/static/<path:filename>")
+def static_files(filename):
+    return send_from_directory("static", filename)
+
+# =====================
+# DATA FILES
+# =====================
+
+@app.route("/data/<path:filename>")
 def serve_data(filename):
-    """
-    Serves JSONL training files from the main project /data folder.
-    """
     data_dir = os.path.join(os.path.dirname(__file__), "..", "data")
     return send_from_directory(data_dir, filename)
 
-# ============================
-# SERVE FRONTEND FILES
-# ============================
-
-@app.route("/")
-def serve_index():
-    return send_from_directory(".", "index.html")
-
-@app.route("/<path:path>")
-def serve_static(path):
-    return send_from_directory(".", path)
-
-# ============================
+# =====================
 # API: RUN MODEL
-# ============================
+# =====================
 
 @app.route("/run", methods=["POST"])
 def run_model():
-    """
-    Accepts user prompt, runs LoRA-enhanced model, returns text output.
-    """
     data = request.json
     prompt = data.get("prompt", "")
 
@@ -80,6 +77,9 @@ def run_model():
     generated = tokenizer.decode(output[0], skip_special_tokens=True)
     return jsonify({"response": generated})
 
+# =====================
+# CHECKPOINT LIST
+# =====================
 
 @app.route("/list_checkpoints")
 def list_checkpoints():
@@ -92,11 +92,9 @@ def list_checkpoints():
 
     return jsonify({"files": files})
 
-
-
-# ============================
+# =====================
 # RUN SERVER
-# ============================
+# =====================
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="127.0.0.1", port=5000, debug=True)
